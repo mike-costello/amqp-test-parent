@@ -3,10 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.redhat.integration.examples.amqp</groupId>
 	<artifactId>amqp-test-sender</artifactId>
 	<packaging>jar</packaging>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>Project - amqp-test-sender</name>
 	<parent>
 		<groupId>com.redhat.integration.examples.amqp</groupId>
@@ -16,16 +14,13 @@
 
 
 	<properties>
-		<main.verticle>com.redhat.eip.examples.integration.amqp.amqp_test_parent.MainVerticle</main.verticle>
+		<main.verticle>com.redhat.eip.integration.amqp.AmqpSenderVerticle</main.verticle>
 	</properties>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-amqp-client</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-junit5</artifactId>
