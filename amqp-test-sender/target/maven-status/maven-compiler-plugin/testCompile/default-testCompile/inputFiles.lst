@@ -1,0 +1,8 @@
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/python/PythonIntegrationTests.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/ruby/RubyIntegrationTests.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/java/BasicIntegrationTest.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/javascript/JavaScriptIntegrationTests.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/java/ModuleIntegrationTest.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/groovy/GroovyIntegrationTests.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/unit/ExampleUnitTest.java
+/home/mcostell/workspace/amqp-test-parent/amqp-test-sender/src/test/java/org/amqp/test/sender/integration/java/SomeVerticle.java
