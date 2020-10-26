@@ -19,8 +19,6 @@
 
 		<vertx.version>3.9.4</vertx.version>
 		<junit-jupiter.version>5.4.0</junit-jupiter.version>
-
-		
 	</properties>
 	<modules>
 		<module>amqp-test-receiver</module>
