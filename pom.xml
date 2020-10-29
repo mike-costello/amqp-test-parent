@@ -16,9 +16,11 @@
 		<maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
 		<maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
 		<exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
-
 		<vertx.version>3.9.4</vertx.version>
 		<junit-jupiter.version>5.4.0</junit-jupiter.version>
+		<fabric8.generator.from>registry.access.redhat.com/openjdk/openjdk-11-rhel7:latest</fabric8.generator.from>
+		<jkube.version>1.0.1</jkube.version>
+		<jkube.generator.from>openjdk/openjdk-11-rhel7</jkube.generator.from>
 	</properties>
 	<modules>
 		<module>amqp-test-receiver</module>
@@ -35,5 +37,69 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<profiles>
+		<!-- FIXME mcostell this needs some more work to be viable -->
+		<profile>
+			<id>jkube</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.jkube</groupId>
+						<artifactId>openshift-maven-plugin</artifactId>
+						<version>${jkube.version}</version>
+						<configuration>
+							<images>
+								<image>
+									<name>${project.artifactId}:${project.version}</name>
+									<build>
+										<from>${jkube.generator.from}</from>
+									</build>
+								</image>
+							</images>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+
+			</build>
+		</profile>
+		<!-- FIXME mcostell fabric8-maven-plugin has been deprecated in favour 
+			of jkube -->
+		<profile>
+			<id>openshift</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>fabric8-maven-plugin</artifactId>
+						<version>4.4.1</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+									<!-- <goal>build</goal> -->
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<enricher>
+								<config>
+									<f8-healthcheck-vertx>
+										<path>/health</path>
+									</f8-healthcheck-vertx>
+								</config>
+							</enricher>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

@@ -11,6 +11,7 @@ public class AmqpSenderApplication {
 	public static void main(String[] args) {
 
 		Vertx vertx = Vertx.factory.vertx();
+		
 		vertx.deployVerticle(new AmqpSenderVerticle(), stringAsyncResult -> {
 			if (stringAsyncResult.succeeded()) {
 				System.out.println("AmqpSenderVerticle deployment complete");

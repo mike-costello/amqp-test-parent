@@ -17,10 +17,12 @@ public class AmqpReceiverApplication {
 				System.out.println("AmqpReceiverVerticle deployment complete");
 			}else {
 				System.out.println("AMQPReceiverVerticale deployment failed");
+				log.error(stringAsyncResult.cause().getMessage()); 
 			}
 			
 		});
 
 	}
+	
 
 }

@@ -1,0 +1,42 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: amqp-test-sender-app-build
+metadata:
+  annotations:
+    description: s2i build for Vertx amqp sender application
+  name: amqp-test-sender-app-build
+objects:
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      name: amqp-test-sender-app
+      labels:
+        app: amqp-test-sender-app
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: amqp-test-sender-app:${APPLICATION_IMAGE_TAG}
+      postCommit: {}
+      resources: {}
+      runPolicy: Serial
+      source:
+        binary: {}
+        type: Binary
+      strategy:
+        type: Source
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: openjdk-11-rhel7:1.0
+            namespace: openshift
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: amqp-test-sender-app
+      labels:
+        app: amqp-test-sender-app
+parameters:
+  - name: APPLICATION_IMAGE_TAG
+    value: latest

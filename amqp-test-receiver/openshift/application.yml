@@ -1,0 +1,67 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+labels:
+  template: amqp-test-receiver-app
+metadata:
+  annotations:
+    description: deployment for Vertx AMQP message receiver
+  name: amqp-test-receiver-app
+objects:
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        app: amqp-test-receiver-app
+      name: amqp-test-receiver-app
+    spec:
+      replicas: 1
+      selector:
+        app: amqp-test-receiver-app
+      template:
+        metadata:
+          labels:
+            app: amqp-test-receiver-app
+        spec:
+          containers:
+            - name: amqp-test-receiver-app
+              image: ' '
+              ports:
+                - containerPort: 8778
+                  name: jolokia
+              readinessProbe:
+                httpGet:
+                  path: /health
+                  port: 8081
+                initialDelaySeconds: 10
+              livenessProbe:
+                httpGet:
+                  path: /health
+                  port: 8081
+                initialDelaySeconds: 180
+              resources:
+                limits:
+                  cpu: "1.0"
+                  memory: 256Mi
+                requests:
+                  cpu: "0.2"
+                  memory: 256Mi
+              volumeMounts:
+                - name: application-config
+                  mountPath: /deployments/config
+          volumes:
+            - name: application-config
+              configMap:
+                name: amqp-test-receiver-app
+                defaultMode: 420
+      triggers:
+        - type: ImageChange
+          imageChangeParams:
+            automatic: false
+            containerNames:
+              - amqp-test-receiever-app
+            from:
+              kind: ImageStreamTag
+              name: amqp-test-receiver:${APPLICATION_IMAGE_TAG}
+parameters:
+  - name: APPLICATION_IMAGE_TAG
+    value: latest
