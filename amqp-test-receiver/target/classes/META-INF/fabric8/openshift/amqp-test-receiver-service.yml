@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    fabric8.io/git-commit: 39cb939a12d0641de452474428cc80c43ccbbf33
+    fabric8.io/git-branch: master
+    fabric8.io/git-url: git@github.com:mike-costello/amqp-test-parent.git
+    prometheus.io/port: "9779"
+    prometheus.io/scrape: "true"
+  labels:
+    expose: "true"
+    app: amqp-test-receiver
+    provider: fabric8
+    version: 0.0.1-SNAPSHOT
+    group: com.redhat.integration.examples.amqp
+  name: amqp-test-receiver
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: amqp-test-receiver
+    provider: fabric8
+    group: com.redhat.integration.examples.amqp
