@@ -44,7 +44,7 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 		configRetriever.getConfig(ar -> {
 			if (ar.failed()) {
 				log.error("unable to retrieve config");
-		//		confPromise.fail(ar.cause());
+				startPromise.fail(ar.cause());
 			} else {
 				config = ar.result();
 			}
@@ -54,8 +54,8 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 		 */
 		AmqpClientOptions options = new AmqpClientOptions().setHost(config.getString("host", "localhost"))
 				.setPort(Integer.valueOf(config.getString("port", "5672")))
-				.setUsername(config.getString("user","user"))
-				.setPassword(config.getString("password","secret"));
+				.setUsername(config.getString("user","guest@cloud1-router-mesh"))
+				.setPassword(config.getString("password","iVNAdTjL"));
 
 		amqpClient = AmqpClient.create(vertx, options);
 		/**
@@ -75,10 +75,11 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 			vertx.executeBlocking(senderPromise -> amqpClient.createSender(new StringBuilder().append(seedAddress).append(".").append(j).toString(), 
 					amqpOptions, done -> {
 				if (done.failed()) {
-					log.error("sender create failed for test-queue");
-					startPromise.fail("unable to create a sender");
+					log.error("sender create failed for queue: " + seedAddress + "." + j);
+					//startPromise.fail("unable to create a sender");
+					log.error(done.cause());
 				} else {
-					log.info("created amqp sender for address test-queue");
+					log.info("created amqp sender for address " + seedAddress + "." + j);
 					amqpSender = done.result();
 					/**
 					 * @author mcostell FIXME this likely needs to do something more meaningful in
@@ -88,14 +89,14 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 					IntStream.range(0, Integer.valueOf(config.getString("numMessages", "100"))).forEach( i -> {
 						log.debug("remaining credits " + amqpSender.remainingCredits());
 						amqpSender.send(AmqpMessage.create().withBody(new StringBuilder().append(seedAddress).append(".").append(j).append(" number " + i).toString()).build());
-						log.info("message sent " + i);
+						log.info("message sent " + i + " to address " + seedAddress + "." + j);
 						
 					});
 
 				}
 				senderPromise.complete();
 			}), res -> {
-				log.info(res.result());
+				log.info("completed sender");
 
 			});
 		});

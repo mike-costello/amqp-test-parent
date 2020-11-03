@@ -1,0 +1,101 @@
+apiVersion: template.openshift.io/v1 
+kind: Template
+labels:
+  template: amqp-test-sender-template
+message: Template for java based AMQP performance testing 
+metadata:
+  annotations:
+    description: Template for AMQP 
+    openshift.io/display-name: AMQP Load Test - Consumer
+    openshift.io/provider-display-name: Red Hat, Inc.
+    tags: amqp,amq,xpaas,strimzi
+    template.openshift.io/documentation-url: 'https://access.redhat.com/documentation/en/red-hat-amq/'
+  name: amqp-producer-load-test
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: amqp-load-test-producer-job
+  spec:
+    parallelism: ${{NUM_REPLICAS}}
+    completions: ${{NUM_LOAD_TEST_RUNS}}
+    activeDeadlineSeconds: ${{LOAD_TEST_DURATION}}
+    backOffLimit: 3 #FIXME mcostell this needs to be configurable 
+    template:
+       metadata: 
+          name: amqp-load-test-producer-job
+       spec: 
+          containers:
+          - env:
+            - name: host
+              value: ${HOST}
+            - name: port
+              value: ${PORT}
+            - name: seedAddress
+              value: ${SEED_ADDRESS}
+            - name: numAddresses
+              value: ${NUM_ADDRESSES}
+            - name: offset
+              value: ${OFFSET}
+            - name: numMessages
+              value: ${NUM_MESSAGES}
+            - name: user
+              value: ${USERNAME}
+            - name: password
+              value: ${PASSWORD}
+            image: image-registry.openshift-image-registry.svc:5000/dford-test/amqp-test-sender-app:latest
+            name: amqp-load-test-consumer
+            command: ["java"]
+            args: ["-jar", "/deployments/amqp-test-sender-0.0.1-SNAPSHOT-fat.jar"]
+          restartPolicy: ${RESTART_POLICY}
+parameters:
+- description: LOAD_TEST_DURATION
+  name: LOAD_TEST_DURATION
+  displayName: LOAD_TEST_DURATION
+  value: "180"  #in seconds
+- description: NUM_REPLICAS #mcostell number of pods to run at once 
+  name: NUM_REPLICAS
+  displayName: NUM_REPLICAS
+  value: "1"
+- description: NUM_LOAD_TEST_RUNS
+  name: NUM_LOAD_TEST_RUNS
+  displayName: NUM_LOAD_TEST_RUNS
+  value: "1"
+- description: RESTART_POLICY
+  name: RESTART_POLICY
+  displayName: RESTART_POLICY
+  value: Never #mcostell other values are OnFailure, Always, Never
+- description: HOST
+  name: HOST
+  displayName: HOST
+  value: "cloud1-router-mesh"
+- description: PORT
+  name: PORT
+  displayName: PORT
+  value: "5672"
+- description: SEED_ADDRESS
+  name: SEED_ADDRESS
+  displayName: SEED_ADDRESS
+  value: "test"
+- description: NUM_ADDRESSES
+  name: NUM_ADDRESSES
+  displayName: NUM_ADDRESSES
+  value: "1000"
+- description: OFFSET
+  displayName: OFFSET
+  name: OFFSET
+  value: "0"
+- description: NUM_MESSAGES
+  name: NUM_MESSAGES
+  displayName: NUM_MESSAGES
+  value: "1000"
+- description: USERNAME
+  name: USERNAME
+  displayName: USERNAME
+  value: "guest@cloud1-router-mesh"
+- description: PASSWORD
+  name: PASSWORD
+  displayName: PASSWORD
+  value: iVNAdTjL
+labels:
+  load-test: producer
