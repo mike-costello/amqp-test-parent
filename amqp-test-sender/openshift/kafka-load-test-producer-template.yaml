@@ -1,0 +1,96 @@
+apiVersion: template.openshift.io/v1 
+kind: Template
+labels:
+  template: amq-streams-load-test-job-producer-template
+message: Load Test Kafka template based on AMQ Streams 1.2 image for load testing 
+metadata:
+  annotations:
+    description: Template for Red Hat AMQ Streams Load Tests
+    openshift.io/display-name: Red Hat AMQ Streams Load Test
+    openshift.io/provider-display-name: Red Hat, Inc.
+    tags: streams,amq,xpaas,strimzi
+    template.openshift.io/documentation-url: 'https://access.redhat.com/documentation/en/red-hat-amq/'
+#   version: 1.4.16
+  name: amq-streams-v12-producer-load-test
+objects:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: load-test-producer-job
+  spec:
+    parallelism: ${NUM_REPLICAS}
+    completions: ${NUM_LOAD_TEST_RUNS}
+    activeDeadlineSeconds: ${LOAD_TEST_DURATION}
+    template:
+       metadata: 
+          name: load-test-producer-job
+       spec:
+          containers:
+          - env:
+            - name: LOAD_TEST_TYPE
+              value: ${LOAD_TEST_TYPE}
+            image: registry.redhat.io/amq7/amq-streams-kafka-24-rhel7:1.5.0
+            name: load-test-producer
+            command: ["./bin/kafka-producer-perf-test.sh"]
+            args: ["--topic", "${TOPIC_LIST}", "--num-records","${NUM_RECORDS}", "--record-size","${PAYLOAD_SIZE}", 
+           "--producer-props","bootstrap.servers=${BROKER_LIST}", "buffer.memory=${BUFFER_MEMORY}", "batch.size=${BATCH_SIZE}", "--throughput=${RECORD_THROUGHPUT}"]
+          restartPolicy: ${RESTART_POLICY}
+parameters:
+- description: LOAD_TEST_TYPE
+  displayName: LOAD_TEST_TYPE
+  name: LOAD_TEST_TYPE
+  value: producer
+- description: Broker list of brokers to load test against
+  displayName: Broker List
+  name: BROKER_LIST
+  value: localhost:9092
+- description: Load Test Topic 
+  displayName: Load Test Topic
+  name: TOPIC_LIST
+  value: test-topic
+- description: NUM_RECORDS 
+  displayName: NUM_RECORDS
+  name: NUM_RECORDS
+  value: "10000"
+- description: PAYLOAD_SIZE 
+  displayName: PAYLOAD_SIZE
+  name: PAYLOAD_SIZE
+  value: "8000" #in bytes
+- description: NUM_ACKS 
+  displayName: NUM_ACKS
+  name: NUM_ACKS
+  value: "1"
+- description: BUFFER_MEMORY 
+  displayName: BUFFER_MEMORY
+  name: BUFFER_MEMORY
+  value: "67108864" #in bytes
+- description: BATCH_SIZE 
+  displayName: BATCH_SIZE
+  name: BATCH_SIZE
+  value: "8196" #in bytes
+- description: NUM_REPLICAS
+  displayName: NUM_REPLICAS
+  name: NUM_REPLICAS
+  value: "3"
+- description: PRODUCER_CONFIG_FILE
+  displayName: PRODUCER_CONFIG_FILE
+  name: PRODUCER_CONFIG_FILE
+  value: "./producer.config"
+- description: RECORD_THROUGHPUT
+  displayName: RECORD_THROUGHPUT
+  name: RECORD_THROUGHPUT
+  value: "-1"
+- description: NUM_LOAD_TEST_RUNS
+  displayName: NUM_LOAD_TEST_RUNS
+  name: NUM_LOAD_TEST_RUNS
+  value: "1" 
+- description: LOAD_TEST_DURATION
+  displayName: LOAD_TEST_DURATION
+  name: LOAD_TEST_DURATION
+  value: "1800" #mcostell value is in seconds
+- description: RESTART_POLICY
+  displayName: RESTART_POLICY
+  name: RESTART_POLICY
+  value: Never #mcostell other values are OnFailure, Always, Never
+labels:
+  load-test: producer
