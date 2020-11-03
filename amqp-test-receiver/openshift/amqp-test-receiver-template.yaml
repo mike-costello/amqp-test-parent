@@ -15,7 +15,7 @@ objects:
 - apiVersion: batch/v1
   kind: Job
   metadata:
-    name: amqp-load-test-consumer-job
+    generateName: amqp-load-test-consumer-job-
   spec:
     parallelism: ${{NUM_REPLICAS}}
     completions: ${{NUM_LOAD_TEST_RUNS}}
