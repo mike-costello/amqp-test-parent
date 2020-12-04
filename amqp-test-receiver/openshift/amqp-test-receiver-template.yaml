@@ -39,9 +39,15 @@ objects:
               value: ${OFFSET}
             image: image-registry.openshift-image-registry.svc:5000/dford-test/amqp-test-receiver-app
             name: amqp-load-test-consumer
-            #command: ["java -jar /deployments/amqp-test-receiver-0.0.1-SNAPSHOT-fat.jar"]
             command: ["java"]
             args: ["-jar", "/deployments/amqp-test-receiver-0.0.1-SNAPSHOT-fat.jar"]
+            resources:
+             requests:
+              memory: "1Gi"
+              cpu: "250m"
+             limits:
+              memory: "2Gi"
+              cpu: "1000m"
           restartPolicy: ${RESTART_POLICY}
 parameters:
 - description: LOAD_TEST_DURATION
@@ -51,7 +57,7 @@ parameters:
 - description: NUM_REPLICAS #mcostell number of pods to run at once 
   name: NUM_REPLICAS
   displayName: NUM_REPLICAS
-  value: "1"
+  value: "2"
 - description: NUM_LOAD_TEST_RUNS
   name: NUM_LOAD_TEST_RUNS
   displayName: NUM_LOAD_TEST_RUNS

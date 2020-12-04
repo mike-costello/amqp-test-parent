@@ -60,17 +60,18 @@ public class AmqpReceiverVerticle extends AbstractVerticle {
 							.setPassword(config.getString("secret"));
 					amqpClient = AmqpClient.create(vertx, options);
 					seedAddress = config.getString("seedAddress", "test");
-					IntStream.range(Integer.valueOf(config.getString("offset", "0")), Integer.valueOf(config.getString("numAddresses", "100"))).forEach(i -> {
-						log.info("Creating receiver for address " + seedAddress + "." + i);
+					//IntStream.range(Integer.valueOf(config.getString("offset", "0")), Integer.valueOf(config.getString("numAddresses", "100")))
+					//.forEach(i -> {
+						log.info("Creating receiver for address " + seedAddress + "." );//+ i);
 						
-						amqpClient.createReceiver(new StringBuilder().append(seedAddress).append(".").append(i).toString(), done -> {
+						amqpClient.createReceiver("test::test.121", done -> {
 							if (done.failed()) {
-								log.error("failed to create message receiver for address " + seedAddress + "." + i);
+								log.error("failed to create message receiver for address " + seedAddress + "." );//+ i);
 								log.error(done.cause());
 								confPromise.fail("failed to create message receiver");
 
 							} else {
-								log.info("successfully created receiver" + seedAddress + "." + i);
+								log.info("successfully created receiver" + seedAddress + "." );//+ i);
 								amqpReceiver = done.result();
 								amqpReceiver.handler(msg -> {
 									log.info("received message " + msg.bodyAsString());
@@ -79,7 +80,7 @@ public class AmqpReceiverVerticle extends AbstractVerticle {
 							}
 
 						});
-					});
+					//});
 
 				}
 			});
@@ -91,6 +92,7 @@ public class AmqpReceiverVerticle extends AbstractVerticle {
 			} else {
 				log.error("***ERROR: AMQP Client Did Not Start***");
 				log.error(res.cause());
+
 			}
 		});
 	}

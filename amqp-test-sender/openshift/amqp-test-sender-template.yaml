@@ -45,8 +45,8 @@ objects:
               value: ${PASSWORD}
             image: image-registry.openshift-image-registry.svc:5000/dford-test/amqp-test-sender-app:latest
             name: amqp-load-test-consumer
-            command: ["java"]
-            args: ["-jar", "/deployments/amqp-test-sender-0.0.1-SNAPSHOT-fat.jar"]
+            #  command: ["java"]
+            # args: ["-jar", "/deployments/amqp-test-sender-0.0.1-SNAPSHOT-fat.jar"]
           restartPolicy: ${RESTART_POLICY}
 parameters:
 - description: LOAD_TEST_DURATION
@@ -56,11 +56,11 @@ parameters:
 - description: NUM_REPLICAS #mcostell number of pods to run at once 
   name: NUM_REPLICAS
   displayName: NUM_REPLICAS
-  value: "1"
+  value: "5"
 - description: NUM_LOAD_TEST_RUNS
   name: NUM_LOAD_TEST_RUNS
   displayName: NUM_LOAD_TEST_RUNS
-  value: "1"
+  value: "5"
 - description: RESTART_POLICY
   name: RESTART_POLICY
   displayName: RESTART_POLICY
@@ -96,6 +96,6 @@ parameters:
 - description: PASSWORD
   name: PASSWORD
   displayName: PASSWORD
-  value: iVNAdTjL
+  value: ANlQBLCN
 labels:
   load-test: producer

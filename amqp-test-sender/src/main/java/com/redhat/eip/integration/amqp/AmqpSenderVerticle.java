@@ -72,14 +72,14 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 		
 		IntStream.range(Integer.valueOf(config.getString("offset","0")),
 				Integer.valueOf(config.getString("offset","0")) + Integer.valueOf(config.getString("numAddresses","100"))).forEach(j -> {
-			vertx.executeBlocking(senderPromise -> amqpClient.createSender(new StringBuilder().append(seedAddress).append(".").append(j).toString(), 
+			vertx.executeBlocking(senderPromise -> amqpClient.createSender(new StringBuilder().append(seedAddress).append(j).toString(), 
 					amqpOptions, done -> {
 				if (done.failed()) {
-					log.error("sender create failed for queue: " + seedAddress + "." + j);
+					log.error("sender create failed for queue: " + seedAddress + "" + j);
 					//startPromise.fail("unable to create a sender");
 					log.error(done.cause());
 				} else {
-					log.info("created amqp sender for address " + seedAddress + "." + j);
+					log.info("created amqp sender for address " + seedAddress + "" + j);
 					amqpSender = done.result();
 					/**
 					 * @author mcostell FIXME this likely needs to do something more meaningful in
@@ -88,8 +88,9 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 					 */
 					IntStream.range(0, Integer.valueOf(config.getString("numMessages", "100"))).forEach( i -> {
 						log.debug("remaining credits " + amqpSender.remainingCredits());
-						amqpSender.send(AmqpMessage.create().withBody(new StringBuilder().append(seedAddress).append(".").append(j).append(" number " + i).toString()).build());
-						log.info("message sent " + i + " to address " + seedAddress + "." + j);
+						//amqpSender.send(AmqpMessage.create().withBody(new StringBuilder().append(seedAddress).append(".").append(j).append(" number " + i).toString()).build());
+						amqpSender.send(AmqpMessage.create().withBody("testme.crazy." + i).build());
+						log.info("message sent " + i + " to address " + seedAddress );
 						
 					});
 
@@ -101,7 +102,7 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 			});
 		});
 		startPromise.complete();
-
+		
 	}
 
 	/**
