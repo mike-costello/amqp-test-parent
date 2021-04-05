@@ -43,8 +43,15 @@ objects:
               value: ${USERNAME}
             - name: password
               value: ${PASSWORD}
-            image: image-registry.openshift-image-registry.svc:5000/dford-test/amqp-test-sender-app:latest
+            image: image-registry.openshift-image-registry.svc:5000/test/amqp-test-sender-app:latest
             name: amqp-load-test-consumer
+            resources:
+             limits:
+              cpu: 2
+              memory: 8Gi
+             requests:
+              cpu: 2
+              memory: 8Gi
             #  command: ["java"]
             # args: ["-jar", "/deployments/amqp-test-sender-0.0.1-SNAPSHOT-fat.jar"]
           restartPolicy: ${RESTART_POLICY}
@@ -92,10 +99,10 @@ parameters:
 - description: USERNAME
   name: USERNAME
   displayName: USERNAME
-  value: "guest@cloud1-router-mesh"
+  value: "guest"
 - description: PASSWORD
   name: PASSWORD
   displayName: PASSWORD
-  value: ANlQBLCN
+  value: test
 labels:
   load-test: producer

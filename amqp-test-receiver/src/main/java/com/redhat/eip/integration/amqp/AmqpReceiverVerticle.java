@@ -60,18 +60,18 @@ public class AmqpReceiverVerticle extends AbstractVerticle {
 							.setPassword(config.getString("secret"));
 					amqpClient = AmqpClient.create(vertx, options);
 					seedAddress = config.getString("seedAddress", "test");
-					//IntStream.range(Integer.valueOf(config.getString("offset", "0")), Integer.valueOf(config.getString("numAddresses", "100")))
-					//.forEach(i -> {
-						log.info("Creating receiver for address " + seedAddress + "." );//+ i);
+					IntStream.range(Integer.valueOf(config.getString("offset", "0")), Integer.valueOf(config.getString("numAddresses", "100")))
+					.forEach(i -> {
+						log.info("Creating receiver for address " + seedAddress + "" + i);
 						
-						amqpClient.createReceiver("test::test.121", done -> {
+						amqpClient.createReceiver(seedAddress + i +".0", done -> {
 							if (done.failed()) {
-								log.error("failed to create message receiver for address " + seedAddress + "." );//+ i);
+								log.error("failed to create message receiver for address " + seedAddress + "" + i);
 								log.error(done.cause());
 								confPromise.fail("failed to create message receiver");
 
 							} else {
-								log.info("successfully created receiver" + seedAddress + "." );//+ i);
+								log.info("successfully created receiver" + seedAddress + "" + i);
 								amqpReceiver = done.result();
 								amqpReceiver.handler(msg -> {
 									log.info("received message " + msg.bodyAsString());
@@ -80,7 +80,24 @@ public class AmqpReceiverVerticle extends AbstractVerticle {
 							}
 
 						});
-					//});
+						amqpClient.createReceiver(seedAddress + i +".1", done -> {
+							if (done.failed()) {
+								log.error("failed to create message receiver for address " + seedAddress + "" + i + ".1");
+								log.error(done.cause());
+								confPromise.fail("failed to create message receiver");
+
+							} else {
+								log.info("successfully created receiver" + seedAddress + "" + i + ".1");
+								amqpReceiver = done.result();
+								amqpReceiver.handler(msg -> {
+									log.info("received message " + msg.bodyAsString());
+									msg.accepted();
+								});
+							}
+
+						});
+
+					});
 
 				}
 			});

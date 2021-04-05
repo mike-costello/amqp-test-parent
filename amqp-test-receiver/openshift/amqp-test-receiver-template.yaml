@@ -37,7 +37,7 @@ objects:
               value: ${NUM_ADDRESSES}
             - name: offset
               value: ${OFFSET}
-            image: image-registry.openshift-image-registry.svc:5000/dford-test/amqp-test-receiver-app
+            image: image-registry.openshift-image-registry.svc:5000/test/amqp-test-receiver-app
             name: amqp-load-test-consumer
             command: ["java"]
             args: ["-jar", "/deployments/amqp-test-receiver-0.0.1-SNAPSHOT-fat.jar"]

@@ -54,8 +54,8 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 		 */
 		AmqpClientOptions options = new AmqpClientOptions().setHost(config.getString("host", "localhost"))
 				.setPort(Integer.valueOf(config.getString("port", "5672")))
-				.setUsername(config.getString("user","guest@cloud1-router-mesh"))
-				.setPassword(config.getString("password","iVNAdTjL"));
+				.setUsername(config.getString("user","guest"))
+				.setPassword(config.getString("password","test"));
 
 		amqpClient = AmqpClient.create(vertx, options);
 		/**
@@ -88,9 +88,8 @@ public class AmqpSenderVerticle extends AbstractVerticle {
 					 */
 					IntStream.range(0, Integer.valueOf(config.getString("numMessages", "100"))).forEach( i -> {
 						log.debug("remaining credits " + amqpSender.remainingCredits());
-						//amqpSender.send(AmqpMessage.create().withBody(new StringBuilder().append(seedAddress).append(".").append(j).append(" number " + i).toString()).build());
 						amqpSender.send(AmqpMessage.create().withBody("testme.crazy." + i).build());
-						log.info("message sent " + i + " to address " + seedAddress );
+						log.info("message sent " + i + " to address " + seedAddress + j);
 						
 					});
 

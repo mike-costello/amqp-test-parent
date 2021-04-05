@@ -1,14 +1,15 @@
 apiVersion: interconnectedcloud.github.io/v1alpha1
 kind: Interconnect
 metadata:
+  #name: mcc-router-mesh
   name: cloud1-router-mesh
   namespace: dford-test
 spec:
   addresses:
-  - prefix: myQueue02
-    waypoint: true
-  - prefix: test
-    waypoint: true
+    - prefix: myQueue02
+      waypoint: true
+    - prefix: test
+      waypoint: true
   autoLinks:
   - address: "test.0"
     connection: "ex-aao-ss-0"
@@ -3610,7 +3611,43 @@ spec:
   - address: "test.99"
     connection: "ex-aao-ss-5"
     direction: "out"
- #Other Tests 
+  - address: "test.100"
+    connection: "ex-aao-ss-0"
+    direction: "in"
+  - address: "test.100"
+    connection: "ex-aao-ss-0"
+    direction: "out"
+  - address: "test.100"
+    connection: "ex-aao-ss-1"
+    direction: "in"
+  - address: "test.100"
+    connection: "ex-aao-ss-1"
+    direction: "out"
+  - address: "test.100"
+    connection: "ex-aao-ss-2"
+    direction: "in"
+  - address: "test.100"
+    connection: "ex-aao-ss-2"
+    direction: "out"
+  - address: "test.100"
+    connection: "ex-aao-ss-3"
+    direction: "in"
+  - address: "test.100"
+    connection: "ex-aao-ss-3"
+    direction: "out"
+  - address: "test.100"
+    connection: "ex-aao-ss-4"
+    direction: "in"
+  - address: "test.100"
+    connection: "ex-aao-ss-4"
+    direction: "out"
+  - address: "test.100"
+    connection: "ex-aao-ss-5"
+    direction: "in"
+  - address: "test.100"
+    connection: "ex-aao-ss-5"
+    direction: "out"
+    #Other Tests 
   - address: myQueue02
     connection: ex-aao-ss-0
     direction: in

@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    ActiveMQArtemis: ex-aao
+    application: test-broker
+  name: test-broker-amq-hdls-svc
+spec:
+  clusterIP: None
+  ports:
+  - name: console-jolokia
+    port: 8161
+    protocol: TCP
+    targetPort: 8161
+  - name: artemis
+    port: 61616
+    protocol: TCP
+    targetPort: 61616
+  publishNotReadyAddresses: true
+  selector:
+    deploymentConfig: test-broker-amq
+    application: test-broker
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
